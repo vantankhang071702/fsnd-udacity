@@ -1,0 +1,44 @@
+CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
+
+CREATE TABLE public.actors (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR,
+    age INTEGER,
+    gender VARCHAR,
+    movie_id INTEGER
+);
+
+CREATE TABLE public.alembic_version (
+    version_num VARCHAR(32) PRIMARY KEY
+);
+
+CREATE TABLE public.movies (
+    id SERIAL PRIMARY KEY,
+    title VARCHAR,
+    release_date TIMESTAMP WITHOUT TIME ZONE
+);
+
+ALTER TABLE ONLY public.actors
+    ADD CONSTRAINT actors_movie_id_fkey FOREIGN KEY (movie_id) REFERENCES public.movies(id);
+
+COPY public.actors (id, name, age, gender, movie_id) FROM stdin;
+1	Leonardo DiCaprio	46	M	1
+2	Emma Stone	32	F	2
+3	Chris Hemsworth	37	M	3
+4	Natalie Portman	39	F	4
+5	Johnny Depp	57	M	5
+6	Anne Hathaway	38	F	6
+\.
+
+COPY public.alembic_version (version_num) FROM stdin;
+12345abcde
+\.
+
+COPY public.movies (id, title, release_date) FROM stdin;
+1	Inception	2010-07-16 00:00:00
+2	La La Land	2016-12-09 00:00:00
+3	Thor	2011-05-06 00:00:00
+4	Black Swan	2010-12-03 00:00:00
+5	Pirates of the Caribbean	2003-07-09 00:00:00
+6	Les Misérables	2012-12-25 00:00:00
+\.
